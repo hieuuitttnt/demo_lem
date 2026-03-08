@@ -123,37 +123,19 @@
         .tree-img {
             position: absolute;
             bottom: 0;
-            width: 110%; /* Rộng hơn màn hình để khi lắc không bị hở mép */
-            left: -5%;
-            object-fit: cover;
-            transform-origin: bottom center; /* Quan trọng: Xoay từ gốc cây */
+            left: 50%;
+            width: 120%;
+            height: auto;
         }
-
-        /* Lớp cây xa: Mờ, tối, chuyển động chậm */
+        
         .tree-back {
             height: 60vh;
             filter: brightness(0.15) blur(1px);
             z-index: 1;
             animation: windSway 8s ease-in-out infinite alternate;
-            opacity: 0.9;
         }
 
-        /* Lớp cây giữa: Rõ hơn, chuyển động vừa */
-        .tree-mid {
-            height: 75vh;
-            filter: brightness(0.1);
-            z-index: 2;
-            animation: windSway 6s ease-in-out infinite alternate-reverse; 
-            /* reverse để lắc ngược chiều cây sau cho tự nhiên */
-        }
-
-        /* Lớp cây gần: Đen tuyền, chi tiết, chuyển động nhiều hơn */
-        .tree-front {
-            height: 90vh; /* Cao gần hết màn hình */
-            filter: brightness(0); /* Đen hoàn toàn (silhouette) */
-            z-index: 3;
-            animation: windSwayFront 5s ease-in-out infinite alternate;
-        }
+        
 
         /* Hiệu ứng gió thổi (Cây nghiêng qua lại) */
         @keyframes windSway {
