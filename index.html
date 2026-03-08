@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rừng Dưới Ánh Trăng - Tương Tác</title>
+    <title>Rừng Dưới Ánh Trăng - Real Trees</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&display=swap"
         rel="stylesheet">
@@ -16,25 +16,23 @@
         }
 
         :root {
-            --forest-dark: #0a1f1a;
-            --forest-deep: #1a3d2e;
-            --forest-mid: #2d5a4a;
+            --forest-bg: #050810;
             --moon-glow: #fef9e7;
             --moon-core: #fffef5;
             --star-light: #e8f4f8;
-            --mist: rgba(230, 240, 245, 0.1);
         }
 
         body {
             font-family: 'Cormorant Garamond', serif;
-            background: var(--forest-dark);
+            background: var(--forest-bg);
             color: var(--moon-glow);
-            overflow: hidden; /* Ngăn cuộn trang để trải nghiệm tương tác tốt hơn */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
             position: relative;
         }
 
+        /* --- BẦU TRỜI --- */
         .sky {
             position: fixed;
             top: 0;
@@ -42,10 +40,10 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom,
-                    #050815 0%,
-                    #0d1b2a 30%,
-                    #1b263b 60%,
-                    var(--forest-dark) 100%);
+                    #02040a 0%,
+                    #0d1b2a 40%,
+                    #1b263b 80%,
+                    #1f3a3d 100%);
             z-index: 1;
             pointer-events: none;
         }
@@ -68,11 +66,11 @@
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* --- CẬP NHẬT CSS CHO MẶT TRĂNG --- */
+        /* --- MẶT TRĂNG (Tương tác cũ) --- */
         .moon-container {
             position: fixed;
             top: 15%;
@@ -80,17 +78,11 @@
             width: 180px;
             height: 180px;
             z-index: 3;
-            /* Cho phép tương tác chạm mà không cuộn trang */
             touch-action: none; 
             cursor: grab;
-            user-select: none;
-            /* Hiệu ứng mượt mà khi thả tay ra */
-            transition: transform 0.1s linear; 
         }
-
-        .moon-container:active {
-            cursor: grabbing;
-        }
+        
+        .moon-container:active { cursor: grabbing; }
 
         .moon {
             width: 100%;
@@ -106,93 +98,86 @@
                 0 0 120px rgba(254, 249, 231, 0.3),
                 inset -20px -20px 40px rgba(0, 0, 0, 0.1);
             animation: moonGlow 6s ease-in-out infinite;
-            /* Đảm bảo mặt trăng nằm trọn trong container */
-            pointer-events: none; 
-        }
-
-        @keyframes moonGlow {
-            0%, 100% {
-                box-shadow:
-                    0 0 60px rgba(254, 249, 231, 0.6),
-                    0 0 120px rgba(254, 249, 231, 0.3),
-                    inset -20px -20px 40px rgba(0, 0, 0, 0.1);
-            }
-            50% {
-                box-shadow:
-                    0 0 80px rgba(254, 249, 231, 0.8),
-                    0 0 160px rgba(254, 249, 231, 0.4),
-                    inset -20px -20px 40px rgba(0, 0, 0, 0.1);
-            }
-        }
-
-        .forest-layer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            z-index: 4;
             pointer-events: none;
         }
 
-        .trees-back {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 40vh;
-            background: linear-gradient(to top, var(--forest-deep), transparent);
-            clip-path: polygon(0% 100%, 0% 60%, 5% 55%, 8% 70%, 12% 50%, 15% 65%,
-                    20% 45%, 25% 60%, 30% 40%, 35% 55%, 40% 35%, 45% 50%,
-                    50% 30%, 55% 45%, 60% 35%, 65% 50%, 70% 40%, 75% 55%,
-                    80% 45%, 85% 60%, 90% 50%, 95% 65%, 100% 55%, 100% 100%);
-            animation: sway 20s ease-in-out infinite;
+        @keyframes moonGlow {
+            0%, 100% { box-shadow: 0 0 60px rgba(254, 249, 231, 0.6); }
+            50% { box-shadow: 0 0 100px rgba(254, 249, 231, 0.8); }
         }
 
-        .trees-mid {
-            position: absolute;
-            bottom: 0;
+        /* --- RỪNG CÂY ẢNH THẬT (NEW) --- */
+        .forest-layer {
+            position: fixed;
+            bottom: -5%; /* Giấu phần chân ảnh một chút */
+            left: 0;
             width: 100%;
-            height: 50vh;
-            background: linear-gradient(to top, var(--forest-mid), transparent);
-            clip-path: polygon(0% 100%, 0% 50%, 3% 45%, 7% 55%, 10% 40%, 14% 50%,
-                    18% 35%, 22% 48%, 27% 30%, 32% 45%, 38% 25%, 42% 40%,
-                    48% 20%, 52% 35%, 58% 25%, 63% 40%, 68% 30%, 73% 45%,
-                    78% 35%, 83% 50%, 88% 40%, 92% 55%, 97% 45%, 100% 50%, 100% 100%);
-            animation: sway 15s ease-in-out infinite reverse;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
 
-        .trees-front {
+        .tree-img {
             position: absolute;
             bottom: 0;
-            width: 100%;
+            width: 110%; /* Rộng hơn màn hình để khi lắc không bị hở mép */
+            left: -5%;
+            object-fit: cover;
+            transform-origin: bottom center; /* Quan trọng: Xoay từ gốc cây */
+        }
+
+        /* Lớp cây xa: Mờ, tối, chuyển động chậm */
+        .tree-back {
             height: 60vh;
-            background: linear-gradient(to top, #0f2d23, transparent);
-            clip-path: polygon(0% 100%, 0% 40%, 4% 35%, 8% 45%, 12% 30%, 16% 42%,
-                    20% 25%, 24% 38%, 28% 20%, 33% 35%, 38% 18%, 43% 32%,
-                    48% 15%, 53% 30%, 58% 20%, 63% 35%, 68% 25%, 73% 40%,
-                    78% 30%, 83% 45%, 88% 35%, 92% 48%, 96% 38%, 100% 45%, 100% 100%);
-            animation: sway 12s ease-in-out infinite;
+            filter: brightness(0.15) blur(1px);
+            z-index: 1;
+            animation: windSway 8s ease-in-out infinite alternate;
+            opacity: 0.9;
         }
 
-        @keyframes sway {
-            0%, 100% { transform: translateX(0) scaleY(1); }
-            50% { transform: translateX(10px) scaleY(1.02); }
+        /* Lớp cây giữa: Rõ hơn, chuyển động vừa */
+        .tree-mid {
+            height: 75vh;
+            filter: brightness(0.1);
+            z-index: 2;
+            animation: windSway 6s ease-in-out infinite alternate-reverse; 
+            /* reverse để lắc ngược chiều cây sau cho tự nhiên */
+        }
+
+        /* Lớp cây gần: Đen tuyền, chi tiết, chuyển động nhiều hơn */
+        .tree-front {
+            height: 90vh; /* Cao gần hết màn hình */
+            filter: brightness(0); /* Đen hoàn toàn (silhouette) */
+            z-index: 3;
+            animation: windSwayFront 5s ease-in-out infinite alternate;
+        }
+
+        /* Hiệu ứng gió thổi (Cây nghiêng qua lại) */
+        @keyframes windSway {
+            0% { transform: rotate(0deg) translateX(0); }
+            100% { transform: rotate(1deg) translateX(10px); }
+        }
+
+        @keyframes windSwayFront {
+            0% { transform: rotate(-0.5deg) scale(1); }
+            100% { transform: rotate(0.5deg) scale(1.02); }
         }
 
         .mist {
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 30vh;
-            background: linear-gradient(to top, var(--mist) 0%, transparent 100%);
+            height: 40vh;
+            background: linear-gradient(to top, rgba(200, 220, 230, 0.1) 0%, transparent 100%);
             z-index: 5;
-            animation: mistFlow 25s ease-in-out infinite;
+            animation: mistFlow 20s infinite linear;
             pointer-events: none;
         }
 
-        @keyframes mistFlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
+        /* --- NỘI DUNG VÀ UI --- */
         .content {
             position: absolute;
             top: 0;
@@ -203,13 +188,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
             padding: 2rem;
             text-align: center;
-            pointer-events: none; /* Để có thể tương tác với mặt trăng phía dưới */
+            pointer-events: none;
         }
 
-        /* Cho phép click vào text và nút nhạc */
         .title, .poetry, .signature, .music-control {
             pointer-events: auto;
         }
@@ -217,329 +201,206 @@
         .title {
             font-family: 'Cinzel', serif;
             font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-shadow: 0 0 20px rgba(254, 249, 231, 0.5);
             animation: fadeInDown 2s ease-out;
         }
 
         .poetry {
-            max-width: 700px;
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            line-height: 2;
+            background: rgba(5, 15, 20, 0.5); /* Nền tối mờ để chữ nổi trên cây */
+            backdrop-filter: blur(4px);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 650px;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.8;
             font-weight: 300;
             font-style: italic;
-            margin-bottom: 2rem;
             opacity: 0;
             animation: fadeIn 3s ease-out 1s forwards;
-            background: rgba(10, 31, 26, 0.4); /* Thêm nền mờ để dễ đọc hơn khi kéo trăng vào */
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(2px);
-        }
-
-        .poetry p {
-            margin-bottom: 1.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .signature {
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-            font-weight: 300;
+            margin-top: 2rem;
             opacity: 0;
-            animation: fadeIn 2s ease-out 4s forwards;
-            letter-spacing: 0.05em;
+            animation: fadeIn 2s ease-out 3s forwards;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .music-control {
             position: fixed;
             bottom: 2rem;
             left: 2rem;
             z-index: 100;
-            background: rgba(26, 61, 46, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 1rem 1.5rem;
+            background: rgba(26, 61, 46, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 10px 20px;
             border-radius: 50px;
-            border: 1px solid rgba(254, 249, 231, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            color: var(--moon-glow);
+            color: #fff;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
+            transition: 0.3s;
         }
-
-        .music-control:hover {
-            background: rgba(26, 61, 46, 0.9);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(254, 249, 231, 0.3);
-        }
-
-        .music-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 2px;
-        }
-
-        .music-bar {
-            width: 3px;
-            background: var(--moon-glow);
-            border-radius: 2px;
-            animation: musicPulse 0.8s ease-in-out infinite;
-        }
-
-        .music-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
-        .music-bar:nth-child(2) { height: 14px; animation-delay: 0.2s; }
-        .music-bar:nth-child(3) { height: 10px; animation-delay: 0.4s; }
-
-        @keyframes musicPulse {
-            0%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(1.5); }
-        }
-
-        .music-control.paused .music-bar { animation: none; }
-
+        .music-control:hover { background: rgba(26, 61, 46, 0.9); }
+        
+        /* Fireflies */
         .firefly {
             position: fixed;
-            width: 4px;
-            height: 4px;
-            background: var(--moon-glow);
+            width: 3px;
+            height: 3px;
+            background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--moon-glow);
+            box-shadow: 0 0 8px #fff;
             z-index: 6;
-            animation: float 8s ease-in-out infinite;
+            animation: floatFirefly 10s infinite;
             pointer-events: none;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            50% { transform: translate(100px, -100px); }
+        @keyframes floatFirefly {
+            0% { transform: translate(0, 0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50px, -100px); opacity: 0; }
         }
+
     </style>
 </head>
 
 <body>
     <div class="sky"></div>
     <div class="stars" id="stars"></div>
-    
-    <!-- Moon được bọc trong container để xử lý sự kiện drag/zoom -->
+
+    <!-- MẶT TRĂNG (Kéo thả + Zoom) -->
     <div class="moon-container" id="moon">
         <div class="moon"></div>
     </div>
 
+    <!-- RỪNG CÂY (ẢNH THẬT + ANIMATION) -->
     <div class="forest-layer">
-        <div class="trees-back"></div>
-        <div class="trees-mid"></div>
-        <div class="trees-front"></div>
+        <!-- Lớp cây xa -->
+        <img src="https://raw.githubusercontent.com/ecemgo/mini-samples-great-tricks/main/forest-parallax/assets/layer-2.png" class="tree-img tree-back" alt="Forest Back">
+        
+        <!-- Lớp cây giữa -->
+        <img src="https://raw.githubusercontent.com/ecemgo/mini-samples-great-tricks/main/forest-parallax/assets/layer-4.png" class="tree-img tree-mid" alt="Forest Mid">
+        
+        <!-- Lớp cây gần -->
+        <img src="https://raw.githubusercontent.com/ecemgo/mini-samples-great-tricks/main/forest-parallax/assets/layer-6.png" class="tree-img tree-front" alt="Forest Front">
     </div>
 
     <div class="mist"></div>
     <div id="fireflies"></div>
 
     <div class="content">
-        <h1 class="title">Đêm Rừng</h1>
-
+        <h1 class="title">Rừng Đêm</h1>
         <div class="poetry">
             <p>
-                Dưới ánh trăng lặng lẽ rơi qua những tán cây, anh thường đứng rất lâu giữa khu rừng tĩnh mịch và nghĩ về em.
-                Đêm không còn đáng sợ như trước, vì mỗi khoảng tối đều mang theo một chút hình bóng của em.
-                Gió khẽ lay cành lá, nghe như tiếng thì thầm dịu dàng.
-                (Hãy thử kéo mặt trăng lại gần để soi sáng nỗi nhớ này...)
+                Gió đêm nay thổi qua những tán thông già,<br>
+                Mang theo hơi lạnh và nỗi nhớ về em.<br>
+                Cây cối nghiêng mình như muốn thì thầm,<br>
+                Rằng dưới ánh trăng này, anh vẫn đợi.<br>
+                <br>
+                (Hãy thử chạm vào mặt trăng, kéo nó lại gần,<br>
+                để thấy rừng cây chuyển động theo từng nhịp thở...)
             </p>
         </div>
-
-        <div class="signature">
-            ✦ Với tình yêu vô tận ✦
-        </div>
+        <div class="signature">✦ Forever ✦</div>
     </div>
 
     <div class="music-control" id="musicControl">
-        <div class="music-icon">
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-        </div>
-        <span id="musicText">Nhạc</span>
+        <span>♫</span> <span id="musicText">Phát nhạc</span>
     </div>
-
     <audio id="bgMusic" loop>
         <source src="demo/music/sm.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // --- TẠO SAO VÀ ĐOM ĐÓM (GIỮ NGUYÊN) ---
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = Math.random() * 3 + 1 + 'px';
-            star.style.height = star.style.width;
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 70 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            star.style.animationDuration = Math.random() * 3 + 2 + 's';
-            starsContainer.appendChild(star);
-        }
-
-        const firefliesContainer = document.getElementById('fireflies');
-        for (let i = 0; i < 15; i++) {
-            const firefly = document.createElement('div');
-            firefly.className = 'firefly';
-            firefly.style.left = Math.random() * 100 + '%';
-            firefly.style.bottom = Math.random() * 40 + 10 + '%';
-            firefly.style.animationDelay = Math.random() * 8 + 's';
-            firefly.style.animationDuration = Math.random() * 4 + 6 + 's';
-            firefliesContainer.appendChild(firefly);
-        }
-
-        // --- NHẠC (GIỮ NGUYÊN) ---
-        const musicControl = document.getElementById('musicControl');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicText = document.getElementById('musicText');
-        let isPlaying = false;
-
-        musicControl.addEventListener('click', () => {
-            if (isPlaying) {
-                bgMusic.pause();
-                musicControl.classList.add('paused');
-                musicText.textContent = 'Nhạc';
-                isPlaying = false;
-            } else {
-                bgMusic.play().catch(e => console.log("Cần tương tác người dùng để phát nhạc"));
-                musicControl.classList.remove('paused');
-                musicText.textContent = 'Đang phát';
-                isPlaying = true;
+        // JS: Stars & Fireflies
+        const createParticles = (id, count, className) => {
+            const container = document.getElementById(id);
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = className;
+                el.style.left = Math.random() * 100 + '%';
+                el.style.top = Math.random() * 100 + '%';
+                el.style.animationDelay = Math.random() * 5 + 's';
+                el.style.animationDuration = Math.random() * 5 + 5 + 's';
+                container.appendChild(el);
             }
-        });
-
-        // --- XỬ LÝ KÉO THẢ VÀ ZOOM MẶT TRĂNG (PHẦN MỚI) ---
-        const moon = document.getElementById('moon');
-        
-        let state = {
-            scale: 1,
-            panning: false,
-            pointX: 0,
-            pointY: 0,
-            startX: 0,
-            startY: 0,
-            cssX: 0,
-            cssY: 0
         };
+        createParticles('stars', 150, 'star');
+        createParticles('fireflies', 20, 'firefly');
 
-        // Hàm cập nhật vị trí
+        // JS: Moon Interaction (Drag & Zoom)
+        const moon = document.getElementById('moon');
+        let state = { scale: 1, panning: false, pointX: 0, pointY: 0, startX: 0, startY: 0, cssX: 0, cssY: 0 };
+
         function updateTransform() {
             moon.style.transform = `translate(${state.cssX}px, ${state.cssY}px) scale(${state.scale})`;
         }
 
-        // 1. Zoom bằng chuột (Scroll Wheel)
-        moon.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const xs = (e.deltaY > 0) ? 0.9 : 1.1;
-            
-            // Giới hạn zoom
-            let newScale = state.scale * xs;
-            if (newScale < 0.5) newScale = 0.5;
-            if (newScale > 5) newScale = 5;
-
-            state.scale = newScale;
-            updateTransform();
-        });
-
-        // 2. Kéo thả bằng chuột (Mouse Drag)
-        moon.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            state.panning = true;
-            state.startX = e.clientX - state.cssX;
-            state.startY = e.clientY - state.cssY;
+        // Mouse Events
+        moon.addEventListener('mousedown', e => {
+            e.preventDefault(); state.panning = true;
+            state.startX = e.clientX - state.cssX; state.startY = e.clientY - state.cssY;
             moon.style.cursor = 'grabbing';
         });
-
-        window.addEventListener('mouseup', () => {
-            state.panning = false;
-            moon.style.cursor = 'grab';
-        });
-
-        window.addEventListener('mousemove', (e) => {
+        window.addEventListener('mouseup', () => { state.panning = false; moon.style.cursor = 'grab'; });
+        window.addEventListener('mousemove', e => {
             if (!state.panning) return;
             e.preventDefault();
-            state.cssX = e.clientX - state.startX;
-            state.cssY = e.clientY - state.startY;
+            state.cssX = e.clientX - state.startX; state.cssY = e.clientY - state.startY;
+            updateTransform();
+        });
+        moon.addEventListener('wheel', e => {
+            e.preventDefault();
+            const xs = (e.deltaY > 0) ? 0.9 : 1.1;
+            state.scale = Math.min(Math.max(state.scale * xs, 0.5), 5);
             updateTransform();
         });
 
-        // 3. Tương tác cảm ứng (Touch - Mobile)
-        let initialPinchDistance = null;
-        let initialScale = 1;
-
-        moon.addEventListener('touchstart', (e) => {
+        // Touch Events
+        let initDist = null, initScale = 1;
+        moon.addEventListener('touchstart', e => {
             if (e.touches.length === 1) {
-                // Chế độ kéo (1 ngón)
                 state.panning = true;
                 state.startX = e.touches[0].clientX - state.cssX;
                 state.startY = e.touches[0].clientY - state.cssY;
             } else if (e.touches.length === 2) {
-                // Chế độ zoom (2 ngón)
                 state.panning = false;
-                initialPinchDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                initialScale = state.scale;
+                initDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                initScale = state.scale;
             }
         }, { passive: false });
-
-        window.addEventListener('touchend', (e) => {
-            state.panning = false;
-            if (e.touches.length < 2) {
-                initialPinchDistance = null;
-            }
-        });
-
-        window.addEventListener('touchmove', (e) => {
+        
+        window.addEventListener('touchend', () => { state.panning = false; initDist = null; });
+        window.addEventListener('touchmove', e => {
             if (e.touches.length === 1 && state.panning) {
-                // Di chuyển
-                // e.preventDefault(); // Uncomment nếu muốn chặn cuộn toàn trang khi chạm vào trăng
                 state.cssX = e.touches[0].clientX - state.startX;
                 state.cssY = e.touches[0].clientY - state.startY;
                 updateTransform();
-            } else if (e.touches.length === 2 && initialPinchDistance) {
-                // Zoom
+            } else if (e.touches.length === 2 && initDist) {
                 e.preventDefault();
-                const currentDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                
-                const ratio = currentDistance / initialPinchDistance;
-                let newScale = initialScale * ratio;
-                
-                // Giới hạn zoom mobile
-                if (newScale < 0.5) newScale = 0.5;
-                if (newScale > 5) newScale = 5;
-                
-                state.scale = newScale;
+                const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                state.scale = Math.min(Math.max(initScale * (dist / initDist), 0.5), 5);
                 updateTransform();
             }
         }, { passive: false });
 
+        // Music
+        const musicBtn = document.getElementById('musicControl');
+        const audio = document.getElementById('bgMusic');
+        let playing = false;
+        musicBtn.addEventListener('click', () => {
+            playing ? audio.pause() : audio.play().catch(console.error);
+            playing = !playing;
+            document.getElementById('musicText').innerText = playing ? 'Đang phát...' : 'Phát nhạc';
+        });
     </script>
 </body>
+
 </html>
